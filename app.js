@@ -1,55 +1,58 @@
-// === TMDB API KEY ===
+// === TMDB API ===
 const API_KEY = "06e0e61c431aedf92744213b2e14ad02";
 const TRENDING_API = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=vi-VN`;
 const NOW_PLAYING_API = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=vi-VN&page=1`;
 
+// === POPUP TRAILER ===
 const trailerPopup = document.getElementById("videoPopup");
 const trailerVideo = document.getElementById("trailerVideo");
 
-// === POPUP TRAILER ===
 function openTrailer(videoKey){
-  trailerVideo.src=`https://www.youtube.com/embed/${videoKey}?autoplay=1`;
-  trailerPopup.style.display="flex";
+  trailerVideo.src = `https://www.youtube.com/embed/${videoKey}?autoplay=1`;
+  trailerPopup.style.display = "flex";
 }
+
 document.querySelector(".close-btn").addEventListener("click", ()=>{
-  trailerPopup.style.display="none"; 
-  trailerVideo.src="";
+  trailerPopup.style.display = "none";
+  trailerVideo.src = "";
 });
-trailerPopup.addEventListener("click",(e)=>{
-  if(e.target===trailerPopup){ 
-    trailerPopup.style.display="none"; 
-    trailerVideo.src=""; 
+
+trailerPopup.addEventListener("click", (e)=>{
+  if(e.target === trailerPopup){
+    trailerPopup.style.display = "none";
+    trailerVideo.src = "";
   }
 });
 
 // === FADE-IN ON SCROLL ===
-const faders=document.querySelectorAll(".fade-in");
+const faders = document.querySelectorAll(".fade-in");
 function fadeInOnScroll(){
-  const triggerBottom=window.innerHeight*0.9;
+  const triggerBottom = window.innerHeight * 0.9;
   faders.forEach(f=>{
-    if(f.getBoundingClientRect().top<triggerBottom) f.classList.add("visible");
+    if(f.getBoundingClientRect().top < triggerBottom) f.classList.add("visible");
   });
 }
-window.addEventListener("scroll",fadeInOnScroll);
+window.addEventListener("scroll", fadeInOnScroll);
 window.addEventListener("load", fadeInOnScroll);
 
-// === LOAD MOVIES FROM TMDB ===
+// === LOAD MOVIES ===
 async function loadMovies(apiUrl, sliderIndex){
   try{
     const res = await fetch(apiUrl);
     const data = await res.json();
+
     const sliderContainer = document.querySelectorAll(".slider-container")[sliderIndex];
     const movieRow = sliderContainer.querySelector(".movie-row");
-    movieRow.innerHTML="";
+    movieRow.innerHTML = "";
 
     data.results.forEach(movie=>{
       const movieDiv = document.createElement("div");
       movieDiv.classList.add("movie");
 
       const img = document.createElement("img");
-      img.src=`https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-      img.alt=movie.title;
-      img.title=movie.title;
+      img.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+      img.alt = movie.title;
+      img.title = movie.title;
 
       // Click poster mở trailer / teaser
       img.addEventListener("click", async ()=>{
@@ -57,9 +60,12 @@ async function loadMovies(apiUrl, sliderIndex){
           const vidRes = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${API_KEY}&language=vi-VN`);
           const vidData = await vidRes.json();
           const trailer = vidData.results.find(v=>(v.type==="Trailer"||v.type==="Teaser") && v.site==="YouTube");
+
           if(trailer) openTrailer(trailer.key);
           else alert("Trailer/Teaser chưa có sẵn cho phim này.");
-        }catch(err){ console.error("Lỗi load trailer:", err); }
+        }catch(err){
+          console.error("Lỗi load trailer:", err);
+        }
       });
 
       movieDiv.appendChild(img);
@@ -68,12 +74,13 @@ async function loadMovies(apiUrl, sliderIndex){
 
     setupSlider(sliderContainer, movieRow);
 
-    // Set hero banner nếu là slider trending đầu tiên
-    if(sliderIndex===0 && data.results.length>0){
+    if(sliderIndex === 0 && data.results.length > 0){
       setHero(data.results[0]);
     }
 
-  }catch(err){ console.error("Lỗi load phim:", err); }
+  }catch(err){
+    console.error("Lỗi load phim:", err);
+  }
 }
 
 // === HERO BANNER ===
@@ -100,13 +107,16 @@ function setHero(movie){
       const vidRes = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${API_KEY}&language=vi-VN`);
       const vidData = await vidRes.json();
       const trailer = vidData.results.find(v=>(v.type==="Trailer"||v.type==="Teaser") && v.site==="YouTube");
+
       if(trailer) openTrailer(trailer.key);
       else alert("Trailer/Teaser chưa có sẵn cho phim này.");
-    }catch(err){ console.error("Lỗi load trailer:", err); }
+    }catch(err){
+      console.error("Lỗi load trailer:", err);
+    }
   };
 }
 
-// === SLIDER LEFT/RIGHT + AUTO ===
+// === SLIDER ===
 function setupSlider(sliderContainer, movieRow){
   const leftBtn = sliderContainer.querySelector(".slider-btn.left");
   const rightBtn = sliderContainer.querySelector(".slider-btn.right");
@@ -122,13 +132,13 @@ function setupSlider(sliderContainer, movieRow){
   },5000);
 }
 
-// === MOBILE MENU TOGGLE ===
+// === MOBILE MENU ===
 const mobileBtn = document.querySelector(".mobile-menu-btn");
 const navMenu = document.getElementById("mainNav");
 mobileBtn.addEventListener("click", ()=> navMenu.classList.toggle("active"));
 
 // === LOAD MOVIES ON PAGE LOAD ===
 window.addEventListener("load", ()=>{
-  loadMovies(TRENDING_API,0);      // Slider trending
-  loadMovies(NOW_PLAYING_API,1);   // Slider now playing
+  loadMovies(TRENDING_API,0);
+  loadMovies(NOW_PLAYING_API,1);
 });
