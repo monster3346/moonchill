@@ -11,7 +11,7 @@
   <!-- HEADER -->
   <header>
     <div class="logo">Moon Chill</div>
-    <nav>
+    <nav id="mainNav">
       <a href="#">Trang chủ</a>
       <a href="#">Phim mới</a>
       <a href="#">Thể loại</a>
@@ -19,22 +19,26 @@
       <a href="#">Tài khoản</a>
     </nav>
     <div class="search-bar">
-      <input type="text" placeholder="Tìm kiếm phim...">
+      <form id="searchForm">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm phim...">
+        <button type="submit">🔍</button>
+      </form>
     </div>
+    <div class="mobile-menu-btn">&#9776;</div>
   </header>
 
-  <!-- HERO -->
-  <section class="hero fade-in" id="hero" style="background-image: url('https://image.tmdb.org/t/p/original/2OMB0ynKlyIenMJWI2Dy9IWT4c.jpg');">
+  <!-- HERO BANNER -->
+  <section class="hero fade-in" id="hero">
     <div class="hero-content">
       <div class="hero-label fade-in" id="heroLabel">NOW STREAMING</div>
-      <h1 id="heroTitle">Money Heist</h1>
-      <p id="heroDesc">Nhóm tội phạm thiên tài với kế hoạch cướp táo bạo nhất trong lịch sử. Liệu họ có thể thành công?</p>
+      <h1 id="heroTitle">Loading...</h1>
+      <p id="heroDesc">Loading description...</p>
       <button id="playButton">Xem ngay</button>
       <button class="add-list">Thêm vào danh sách</button>
     </div>
   </section>
 
-  <!-- PHIM THỊNH HÀNH -->
+  <!-- SLIDER PHIM THỊNH HÀNH -->
   <section class="fade-in">
     <h2>Phim thịnh hành</h2>
     <div class="slider-container">
@@ -44,7 +48,7 @@
     </div>
   </section>
 
-  <!-- PHIM MỚI CẬP NHẬT -->
+  <!-- SLIDER PHIM MỚI CẬP NHẬT -->
   <section class="fade-in">
     <h2>Phim mới cập nhật</h2>
     <div class="slider-container">
@@ -54,7 +58,7 @@
     </div>
   </section>
 
-  <!-- POPUP VIDEO TRAILER -->
+  <!-- POPUP TRAILER -->
   <div id="videoPopup" class="popup">
     <div class="popup-content">
       <span class="close-btn">&times;</span>
@@ -67,6 +71,7 @@
     © 2025 Moon Chill. Inspired by Netflix UI.
   </footer>
 
+  <!-- SCRIPT JS -->
   <script src="app.js"></script>
 </body>
 </html>
