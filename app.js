@@ -1,3 +1,4 @@
+// === TMDB API KEY ===
 const API_KEY = "06e0e61c431aedf92744213b2e14ad02";
 const TRENDING_API = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=vi-VN`;
 const NOW_PLAYING_API = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=vi-VN&page=1`;
