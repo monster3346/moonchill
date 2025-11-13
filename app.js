@@ -1,6 +1,7 @@
-const API_KEY = "06e0e61c431aedf92744213b2e14ad02";
-const TRENDING_API = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=vi-VN`;
-const NOW_PLAYING_API = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=vi-VN&page=1`;
+// === BASE API ===
+const BASE_API = "https://moonchill-7t9uwvbqz-monster3346s-projects.vercel.app/api";
+const TRENDING_API = `${BASE_API}/trending`;
+const NOW_PLAYING_API = `${BASE_API}/now_playing`;
 
 const trailerPopup = document.getElementById("videoPopup");
 const trailerVideo = document.getElementById("trailerVideo");
@@ -15,6 +16,7 @@ document.querySelector(".close-btn").addEventListener("click", ()=>{
   trailerPopup.style.display="none"; 
   trailerVideo.src="";
 });
+
 trailerPopup.addEventListener("click",(e)=>{
   if(e.target===trailerPopup){ 
     trailerPopup.style.display="none"; 
@@ -33,7 +35,7 @@ function fadeInOnScroll(){
 window.addEventListener("scroll",fadeInOnScroll);
 window.addEventListener("load", fadeInOnScroll);
 
-// Load movies từ TMDB
+// Load movies từ server trung gian
 async function loadMovies(apiUrl, sliderIndex){
   try{
     const res = await fetch(apiUrl);
@@ -54,10 +56,9 @@ async function loadMovies(apiUrl, sliderIndex){
       // Click poster mở trailer / teaser
       img.addEventListener("click", async ()=>{
         try{
-          const vidRes = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${API_KEY}&language=vi-VN`);
+          const vidRes = await fetch(`${BASE_API}/video/${movie.id}`);
           const vidData = await vidRes.json();
 
-          // Tìm trailer ưu tiên, fallback teaser
           const trailer = vidData.results.find(v=>(v.type==="Trailer"||v.type==="Teaser") && v.site==="YouTube");
           if(trailer) openTrailer(trailer.key);
           else alert("Trailer/Teaser chưa có sẵn cho phim này.");
