@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Moon Chill - Xem phim trực tuyến</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="logo">Moon Chill</div>
+    <nav>
+      <a href="#">Trang chủ</a>
+      <a href="#">Phim mới</a>
+      <a href="#">Thể loại</a>
+      <a href="#">Yêu thích</a>
+      <a href="#">Tài khoản</a>
+    </nav>
+    <div class="search-bar">
+      <input type="text" placeholder="Tìm kiếm phim...">
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero fade-in" id="hero" style="background-image: url('https://image.tmdb.org/t/p/original/2OMB0ynKlyIenMJWI2Dy9IWT4c.jpg');">
+    <div class="hero-content">
+      <div class="hero-label fade-in" id="heroLabel">NOW STREAMING</div>
+      <h1 id="heroTitle">Money Heist</h1>
+      <p id="heroDesc">Nhóm tội phạm thiên tài với kế hoạch cướp táo bạo nhất trong lịch sử. Liệu họ có thể thành công?</p>
+      <button id="playButton">Xem ngay</button>
+      <button class="add-list">Thêm vào danh sách</button>
+    </div>
+  </section>
+
+  <!-- PHIM THỊNH HÀNH -->
+  <section class="fade-in">
+    <h2>Phim thịnh hành</h2>
+    <div class="slider-container">
+      <button class="slider-btn left">&#10094;</button>
+      <div class="movie-row">
+        <div class="movie"><img src="https://image.tmdb.org/t/p/w500/7RyHsO4yDXtBv1zUU3mTpHeQ0d5.jpg" alt="Avengers: Endgame"></div>
+        <div class="movie"><img src="https://image.tmdb.org/t/p/w500/rSPw7tgCH9c6NqICZef4kZjFOQ5.jpg" alt="The Godfather"></div>
+        <div class="movie"><img src="https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg" alt="Pulp Fiction"></div>
+        <div class="movie"><img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" alt="The Dark Knight"></div>
+        <div class="movie"><img src="https://image.tmdb.org/t/p/w500/abW5AzHDaY0XXlZ9k35mTt8NQnw.jpg" alt="Interstellar"></div>
+      </div>
+      <button class="slider-btn right">&#10095;</button>
+    </div>
+  </section>
+
+  <!-- PHIM MỚI CẬP NHẬT -->
+  <section class="fade-in">
+    <h2>Phim mới cập nhật</h2>
+    <div class="slider-container">
+      <button class="slider-btn left">&#10094;</button>
+      <div class="movie-row">
+        <div class="movie"><img src="https://image.tmdb.org/t/p/w500/2CAL2433ZeIihfX1Hb2139CX0pW.jpg" alt="Joker"></div>
+        <div class="movie"><img src="https://image.tmdb.org/t/p/w500/4ZKZx3asvP3hj7LQo4G7c3LkiCK.jpg" alt="Tenet"></div>
+        <div class="movie"><img src="https://image.tmdb.org/t/p/w500/9O7gLzmreU0nGkIB6K3BsJbzvNv.jpg" alt="Fight Club"></div>
+        <div class="movie"><img src="https://image.tmdb.org/t/p/w500/6KErczPBROQty7QoIsaa6wJYXZi.jpg" alt="The Matrix"></div>
+        <div class="movie"><img src="https://image.tmdb.org/t/p/w500/6gbH9t8XsX6DSW8YvsXk7E8xj1n.jpg" alt="Inception"></div>
+      </div>
+      <button class="slider-btn right">&#10095;</button>
+    </div>
+  </section>
+
+  <!-- POPUP VIDEO TRAILER -->
+  <div id="videoPopup" class="popup">
+    <div class="popup-content">
+      <span class="close-btn">&times;</span>
+      <video controls autoplay id="trailerVideo">
+        <source src="https://cdn.jsdelivr.net/gh/ayusharma1411/trailer-samples/moneyheist.mp4" type="video/mp4">
+        Trình duyệt của bạn không hỗ trợ video.
+      </video>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="fade-in">
+    © 2025 Moon Chill. Inspired by Netflix UI.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
