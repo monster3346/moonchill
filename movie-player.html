@@ -4,89 +4,107 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Moon Chill - Đang phát</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #111;
+      --bg: #0f0f0f;
       --accent: #e50914;
-      --text: #fff;
+      --text: #ffffff;
       --glass: rgba(20, 20, 20, 0.7);
+      --radius: 16px;
+      --transition: .4s cubic-bezier(.25,.8,.25,1);
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
-      background:var(--bg);
+      background:radial-gradient(ellipse at top, #1b1b1b 0%, #0a0a0a 100%);
       color:var(--text);
-      font-family:'Roboto',sans-serif;
+      font-family:'Inter',sans-serif;
       min-height:100vh;
       display:flex;
       flex-direction:column;
-      background:linear-gradient(135deg,#000 0%, #1a1a1a 100%);
-      animation:bgMove 20s ease infinite;
+      animation:fadeIn .8s;
     }
-    @keyframes bgMove{
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
-    }
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+    /* HEADER - GLASS */
     header{
       display:flex;align-items:center;justify-content:space-between;
-      padding:15px 40px;background:var(--glass);backdrop-filter:blur(10px);
+      padding:18px 50px;background:var(--glass);backdrop-filter:blur(12px);
       position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.08)
     }
-    header .logo{font-size:1.8rem;font-weight:700;color:var(--accent);letter-spacing:1px}
+    header .logo{font-size:2rem;font-weight:700;color:var(--accent);letter-spacing:1px}
     .back-btn{
-      background:var(--accent);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:25px;cursor:pointer;font-weight:700;transition:.3s
+      background:var(--accent);color:#fff;border:none;padding:.7rem 1.5rem;border-radius:30px;
+      cursor:pointer;font-weight:600;transition:var(--transition)
     }
     .back-btn:hover{background:#f40612;transform:scale(1.05)}
 
-    main{
-      flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;gap:2rem
-    }
+    /* MAIN LAYOUT */
+    main{flex:1;display:flex;flex-direction:column;align-items:center;padding:50px 20px;gap:2.5rem}
 
-    /* TRAILER */
-    #trailerWrap{
-      width:100%;max-width:1100px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;
-      box-shadow:0 10px 40px rgba(229,9,20,.4);transition:.4s
+    /* TRAILER - AUTO PHÁT CÓ TIẾNG, KHÔNG TÙY CHỈNH VOLUME NGOÀI */
+    .trailer-box{
+      width:100%;max-width:1100px;aspect-ratio:16/9;border-radius:var(--radius);
+      overflow:hidden;box-shadow:0 15px 50px rgba(229,9,20,.45);position:relative;
+      transition:var(--transition)
     }
-    #trailerWrap:hover{transform:scale(1.01)}
+    .trailer-box:hover{transform:scale(1.01)}
     #trailerPlayer{width:100%;height:100%;border:none}
 
-    /* INFO PHIM */
-    .infoCard{
-      width:100%;max-width:1100px;background:var(--glass);backdrop-filter:blur(10px);
-      border-radius:12px;padding:25px 30px;display:flex;gap:25px;flex-wrap:wrap;align-items:center
+    /* INFO CARD */
+    .info-card{
+      width:100%;max-width:1100px;background:var(--glass);backdrop-filter:blur(12px);
+      border-radius:var(--radius);padding:30px;display:grid;grid-template-columns:160px 1fr;gap:30px;align-items:start
     }
-    .infoCard img{width:160px;border-radius:8px;box-shadow:0 5px 20px rgba(0,0,0,.5)}
-    .details{flex:1;min-width:250px}
-    .details h2{font-size:1.8rem;margin-bottom:.5rem}
-    .details p{line-height:1.6;margin-bottom:1rem;opacity:.9}
-    .meta{margin-bottom:1rem;font-size:.9rem;opacity:.7}
-    .meta span{margin-right:15px}
+    .info-card img{width:160px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+    .details h2{font-size:2rem;margin-bottom:.5rem}
+    .details .meta{font-size:.9rem;opacity:.7;margin-bottom:1rem}
+    .details .meta span{margin-right:15px}
+    .overview{font-size:1rem;line-height:1.7;opacity:.9}
 
-    /* PLAYER CHÍNH */
-    #playerWrap{
-      width:100%;max-width:1100px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;
-      box-shadow:0 10px 40px rgba(0,0,0,.6);background:#000
+    /* PLAYER SECTION */
+    .player-section{
+      width:100%;max-width:1100px; background:var(--glass);border-radius:var(--radius);
+      padding:25px;backdrop-filter:blur(12px)
     }
-    #player{width:100%;height%;display:block}
+    .player-title{font-size:1.3rem;margin-bottom:1rem;font-weight:600}
+    #playerWrap{
+      width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;
+      box-shadow:0 10px 40px rgba(0,0,0,.6)
+    }
+    #player{width:100%;height:100%;display:block}
 
     /* OPTIONS */
     .opts{
-      display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:1rem
+      display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem
     }
     input[type="file"]{display:none}
     label[for="localFile"]{
-      background:var(--accent);color:#fff;padding:.7rem 1.4rem;border-radius:25px;cursor:pointer;font-weight:700;transition:.3s
+      background:var(--accent);color:#fff;padding:.75rem 1.5rem;border-radius:30px;
+      cursor:pointer;font-weight:600;transition:var(--transition)
     }
     label[for="localFile"]:hover{transform:scale(1.05)}
     #customUrl{
-      flex:1;max-width:400px;padding:.7rem 1rem;border-radius:25px;border:none;outline:none;background:rgba(255,255,255,.1);color:#fff;transition:.3s
+      flex:1;min-width:250px;padding:.75rem 1rem;border-radius:30px;border:none;outline:none;
+      background:rgba(255,255,255,.1);color:#fff;transition:background .3s
     }
     #customUrl:focus{background:rgba(255,255,255,.2)}
     button{
-      background:#333;color:#fff;border:none;padding:.7rem 1.4rem;border-radius:25px;cursor:pointer;font-weight:700;transition:.3s
-    }
+      background:#333;color:#fff;border:none;padding:.75rem 1.5rem;border-radius:30px;
+      cursor:pointer;font-weight:600;transition:var(--transition)}
     button:hover{background:#444;transform:scale(1.05)}
+
+    /* FOOTER */
+    footer{
+      text-align:center;padding:20px;font-size:.9rem;opacity:.6;background:#000
+    }
+
+    /* RESPONSIVE */
+    @media (max-width:768px){
+      header{padding:15px 20px}
+      .info-card{grid-template-columns:1fr;text-align:center}
+      .opts{flex-direction:column;align-items:center}
+    }
   </style>
 </head>
 
@@ -97,38 +115,41 @@
   </header>
 
   <main>
-    <!-- TRAILER AUTO PHÁT -->
-    <div id="trailerWrap">
+    <!-- TRAILER AUTO PHÁT CÓ TIẾNG, KHÔNG TÙY CHỈNH VOLUME NGOÀI -->
+    <div class="trailer-box">
       <iframe id="trailerPlayer" allowfullscreen></iframe>
     </div>
 
     <!-- INFO PHIM -->
-    <div class="infoCard">
+    <div class="info-card">
       <img id="poster" src="" alt="Poster">
       <div class="details">
         <h2 id="mTitle">...</h2>
-        <p id="mOverview"></p>
         <div class="meta">
           <span id="mYear"></span>
           <span id="mGenres"></span>
           <span id="mRuntime"></span>
         </div>
+        <p id="mOverview" class="overview"></p>
       </div>
     </div>
 
     <!-- PLAYER CHÍNH -->
-    <div id="playerWrap">
-      <video id="player" controls style="display:none;"></video>
-    </div>
-
-    <!-- OPTIONS -->
-    <div class="opts">
-      <label for="localFile">📁 Chọn phim từ máy</label>
-      <input type="file" id="localFile" accept="video/*">
-      <input id="customUrl" placeholder="Hoặc dán link embed phim (Drive/Fembed...)">
-      <button onclick="applyCustom()">Xem phim</button>
+    <div class="player-section">
+      <div class="player-title">Xem phim</div>
+      <div id="playerWrap">
+        <video id="player" controls style="display:none;"></video>
+      </div>
+      <div class="opts">
+        <label for="localFile">📁 Chọn phim từ máy</label>
+        <input type="file" id="localFile" accept="video/*">
+        <input id="customUrl" placeholder="Hoặc dán link embed phim (Drive/Fembed...)">
+        <button onclick="applyCustom()">Xem phim</button>
+      </div>
     </div>
   </main>
+
+  <footer>© 2025 Moon Chill</footer>
 
   <script>
     const API_KEY = '06e0e61c431aedf92744213b2e14ad02';
@@ -156,10 +177,10 @@
         const vidData = await vidRes.json();
         const detail = await detailRes.json();
 
-        // trailer
+        // trailer: KHÔNG mute → có tiếng, không hiển thị volume ngoài
         const key = vidData.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube')?.key;
         if (key) {
-          trailerPlayer.src = `https://www.youtube.com/embed/${key}?autoplay=1&mute=1`;
+          trailerPlayer.src = `https://www.youtube.com/embed/${key}?autoplay=1`;
         } else {
           trailerPlayer.style.display = 'none';
         }

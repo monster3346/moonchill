@@ -4,133 +4,146 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Moon Chill - Xem phim trực tuyến</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #111;
+      --bg: #0f0f0f;
       --accent: #e50914;
-      --text: #fff;
+      --text: #ffffff;
       --glass: rgba(20, 20, 20, 0.7);
+      --radius: 16px;
+      --transition: .4s cubic-bezier(.25,.8,.25,1);
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--bg);color:var(--text);font-family:'Roboto',sans-serif;overflow-x:hidden}
-    a{color:var(--text);text-decoration:none}
-    section{padding:50px 30px;position:relative}
-    section h2{margin-bottom:25px;font-size:2rem;font-weight:700;letter-spacing:.5px}
+    body{
+      background:radial-gradient(ellipse at top, #1b1b1b 0%, #0a0a0a 100%);
+      color:var(--text);
+      font-family:'Inter',sans-serif;
+      overflow-x:hidden;
+      animation:fadeIn .8s;
+    }
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    a{color:var(--text);text-decoration:none;transition:var(--transition)}
 
-    /* HEADER */
+    /* HEADER - GLASS */
     header{
       display:flex;justify-content:space-between;align-items:center;
-      padding:15px 40px;background:var(--glass);backdrop-filter:blur(10px);
+      padding:18px 50px;background:var(--glass);backdrop-filter:blur(12px);
       position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.08)
     }
     header .logo{font-size:2rem;font-weight:700;color:var(--accent);letter-spacing:1px}
-    header nav a{margin:0 12px;font-size:1rem;transition:.3s}
+    header nav a{margin:0 14px;font-size:1rem;font-weight:500}
     header nav a:hover{color:var(--accent);transform:scale(1.05)}
-    header .search-bar{display:flex;align-items:center}
+    header .search-bar{display:flex;align-items:center;gap:8px}
     header .search-bar input{
-      padding:8px 14px;border-radius:25px;border:none;outline:none;width:220px;background:rgba(255,255,255,.1);color:#fff;transition:.3s
+      padding:8px 16px;border-radius:25px;border:none;outline:none;width:240px;
+      background:rgba(255,255,255,.1);color:#fff;transition:var(--transition)
     }
-    header .search-bar input:focus{background:rgba(255,255,255,.2);width:250px}
-    header .mobile-menu-btn{display:none;font-size:2rem;cursor:pointer}
+    header .search-bar input:focus{background:rgba(255,255,255,.2);width:280px}
+    header .mobile-menu-btn{display:none;font-size:2.2rem;cursor:pointer}
 
-    /* HERO */
+    /* HERO - CINEMATIC */
     .hero{
-      position:relative;height:80vh;background-size:cover;background-position:center;
-      display:flex;align-items:center;justify-content:flex-start;padding:60px;
+      position:relative;height:85vh;background-size:cover;background-position:center;
+      display:flex;align-items:center;justify-content:flex-start;padding:70px;
       animation:heroZoom 25s ease-in-out infinite alternate
     }
     @keyframes heroZoom{0%{transform:scale(1)}100%{transform:scale(1.08)}}
     .hero::before{
       content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.9) 30%,transparent)
     }
-    .hero-content{position:relative;max-width:600px}
-    .hero-label{color:var(--accent);font-weight:700;margin-bottom:.5rem;font-size:1.1rem;letter-spacing:2px}
-    .hero h1{font-size:3.5rem;margin-bottom:1rem;line-height:1.1}
-    .hero p{margin-bottom:1.5rem;line-height:1.6;font-size:1.1rem;opacity:.9}
-    .btn-group{display:flex;gap:1rem;margin-top:1.5rem}
+    .hero-content{position:relative;max-width:650px}
+    .hero-label{color:var(--accent);font-weight:700;margin-bottom:.5rem;font-size:1.2rem;letter-spacing:2px}
+    .hero h1{font-size:3.8rem;margin-bottom:1rem;line-height:1.1}
+    .hero p{margin-bottom:1.5rem;line-height:1.7;font-size:1.1rem;opacity:.9}
+    .btn-group{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
     .btn-group button{
-      padding:.8rem 1.8rem;font-size:1rem;border:none;border-radius:30px;cursor:pointer;font-weight:700;transition:.3s
+      padding:.9rem 2rem;font-size:1rem;border:none;border-radius:30px;cursor:pointer;font-weight:600;transition:var(--transition)
     }
     #playButton{background:var(--accent);color:#fff}
     #playButton:hover{background:#f40612;transform:scale(1.05)}
-    #watchButton{background:rgba(255,255,255,.2);color:#fff;backdrop-filter:blur(5px)}
-    #watchButton:hover{background:rgba(255,255,255,.3);transform:scale(1.05)}
-    .add-list{background:rgba(255,255,255,.1);color:#fff;margin-top:1rem;padding:.6rem 1.4rem;border:1px solid rgba(255,255,255,.3);border-radius:25px;cursor:pointer;transition:.3s}
+    #watchButton{background:rgba(255,255,255,.15);color:#fff;backdrop-filter:blur(5px)}
+    #watchButton:hover{background:rgba(255,255,255,.25);transform:scale(1.05)}
+    .add-list{
+      background:rgba(255,255,255,.1);color:#fff;margin-top:1rem;padding:.7rem 1.6rem;
+      border:1px solid rgba(255,255,255,.3);border-radius:25px;cursor:pointer;transition:var(--transition)
+    }
     .add-list:hover{background:rgba(255,255,255,.2);transform:scale(1.05)}
 
-    /* SLIDER */
+    /* SLIDER - POSTER HOVER */
     .slider-container{position:relative}
     .movie-row{
-      display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:15px
+      display:flex;gap:14px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:15px
     }
     .movie-row::-webkit-scrollbar{display:none}
     .movie{
-      flex:0 0 auto;position:relative;border-radius:8px;overflow:hidden;
-      transition:transform .4s,box-shadow .4s
+      flex:0 0 auto;position:relative;border-radius:var(--radius);overflow:hidden;
+      transition:var(--transition)
     }
-    .movie img{height:220px;border-radius:8px;display:block}
-    .movie:hover{transform:scale(1.12) translateY(-5px);box-shadow:0 10px 30px rgba(229,9,20,.5)}
+    .movie img{height:230px;border-radius:var(--radius);display:block;transition:var(--transition)}
+    .movie::after{
+      content:'▶';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.5);
+      font-size:2.5rem;color:#fff;opacity:0;transition:opacity .3s,transform .3s;
+      pointer-events:none
+    }
+    .movie:hover{transform:scale(1.12) translateY(-5px);box-shadow:0 12px 40px rgba(229,9,20,.55)}
+    .movie:hover::after{opacity:1;transform:translate(-50%,-50%) scale(1)}
     .slider-btn{
       position:absolute;top:50%;transform:translateY(-50%);
-      background:rgba(0,0,0,.6);border:none;color:#fff;font-size:2.2rem;
-      padding:8px 14px;cursor:pointer;border-radius:50%;z-index:10;transition:.3s
+      background:rgba(0,0,0,.6);border:none;color:#fff;font-size:2.4rem;
+      padding:10px 16px;cursor:pointer;border-radius:50%;z-index:10;transition:var(--transition)
     }
     .slider-btn:hover{background:rgba(0,0,0,.8);transform:translateY(-50%) scale(1.1)}
     .slider-btn.left{left:10px}
     .slider-btn.right{right:10px}
 
-    /* SKELETON LOADING */
+    /* SKELETON & EMPTY */
     .skeleton{
       background:linear-gradient(90deg,#222 25%,#333 50%,#222 75%);
       background-size:200% 100%;animation:shine 1.5s infinite;
-      height:220px;width:147px;border-radius:8px
+      height:230px;width:154px;border-radius:var(--radius)
     }
     @keyframes shine{0%{background-position:-200%}100%{background-position:200%}}
-
-    /* EMPTY STATE */
     .empty{
-      text-align:center;padding:60px 20px
+      text-align:center;padding:70px 20px
     }
     .empty img{
-      width:180px;opacity:.3;margin-bottom:20px
+      width:200px;opacity:.3;margin-bottom:25px
     }
     .empty h3{
-      font-size:1.5rem;margin-bottom:10px;opacity:.7
+      font-size:1.6rem;margin-bottom:10px;opacity:.7
     }
     .empty p{
       opacity:.5
     }
 
-    /* POPUP TRAILER */
+    /* POPUP TRAILER - GLASS */
     .popup{
       display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);
       justify-content:center;align-items:center;z-index:2000;backdrop-filter:blur(5px)
     }
     .popup-content{
-      position:relative;width:90%;max-width:900px;border-radius:12px;overflow:hidden;
-      box-shadow:0 0 40px rgba(0,0,0,.8)
+      position:relative;width:90%;max-width:900px;border-radius:var(--radius);overflow:hidden;
+      box-shadow:0 0 50px rgba(0,0,0,.8)
     }
     .popup .close-btn{
-      position:absolute;top:15px;right:20px;font-size:2.5rem;cursor:pointer;color:#fff;z-index:2
+      position:absolute;top:15px;right:20px;font-size:2.8rem;cursor:pointer;color:#fff;z-index:2
     }
 
-    /* DROPDOWN THỂ LOẠI - GLASS */
+    /* DROPDOWN - GLASS */
     .dropdown{position:relative;display:inline-block}
     .dropdown-content{
       display:none;position:absolute;background:var(--glass);backdrop-filter:blur(10px);
-      min-width:180px;z-index:1;border-radius:8px;border:1px solid rgba(255,255,255,.1);overflow:hidden
+      min-width:180px;z-index:1;border-radius:var(--radius);border:1px solid rgba(255,255,255,.1);overflow:hidden
     }
     .dropdown-content a{
-      color:#fff;padding:12px 18px;display:block;font-size:.95rem;transition:.2s
+      color:#fff;padding:12px 18px;display:block;font-size:.95rem;transition:var(--transition)
     }
     .dropdown-content a:hover{background:rgba(255,255,255,.1)}
     .dropdown:hover .dropdown-content{display:block}
 
-    /* TRANSITION SECTION */
-    .section-fade{
-      animation:fadeIn .6s ease-in-out
-    }
+    /* SECTION TRANSITION */
+    .section-fade{animation:fadeIn .6s ease-in-out}
     @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
     /* FOOTER */
@@ -145,7 +158,7 @@
       header nav.active{display:flex}
       header .mobile-menu-btn{display:block}
       .hero{padding:40px 20px;height:60vh}
-      .hero h1{font-size:2.2rem}
+      .hero h1{font-size:2.5rem}
       section{padding:35px 20px}
     }
   </style>
