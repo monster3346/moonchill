@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Moon Chill - Đang phát</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #111;
+      --accent: #e50914;
+      --text: #fff;
+      --glass: rgba(20, 20, 20, 0.7);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Roboto',sans-serif;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      background:linear-gradient(135deg,#000 0%, #1a1a1a 100%);
+      animation:bgMove 20s ease infinite;
+    }
+    @keyframes bgMove{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+    header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:15px 40px;background:var(--glass);backdrop-filter:blur(10px);
+      position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.08)
+    }
+    header .logo{font-size:1.8rem;font-weight:700;color:var(--accent);letter-spacing:1px}
+    .back-btn{
+      background:var(--accent);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:25px;cursor:pointer;font-weight:700;transition:.3s
+    }
+    .back-btn:hover{background:#f40612;transform:scale(1.05)}
+
+    main{
+      flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;gap:2rem
+    }
+
+    /* TRAILER */
+    #trailerWrap{
+      width:100%;max-width:1100px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;
+      box-shadow:0 10px 40px rgba(229,9,20,.4);transition:.4s
+    }
+    #trailerWrap:hover{transform:scale(1.01)}
+    #trailerPlayer{width:100%;height:100%;border:none}
+
+    /* INFO PHIM */
+    .infoCard{
+      width:100%;max-width:1100px;background:var(--glass);backdrop-filter:blur(10px);
+      border-radius:12px;padding:25px 30px;display:flex;gap:25px;flex-wrap:wrap;align-items:center
+    }
+    .infoCard img{width:160px;border-radius:8px;box-shadow:0 5px 20px rgba(0,0,0,.5)}
+    .details{flex:1;min-width:250px}
+    .details h2{font-size:1.8rem;margin-bottom:.5rem}
+    .details p{line-height:1.6;margin-bottom:1rem;opacity:.9}
+    .meta{margin-bottom:1rem;font-size:.9rem;opacity:.7}
+    .meta span{margin-right:15px}
+
+    /* PLAYER CHÍNH */
+    #playerWrap{
+      width:100%;max-width:1100px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;
+      box-shadow:0 10px 40px rgba(0,0,0,.6);background:#000
+    }
+    #player{width:100%;height%;display:block}
+
+    /* OPTIONS */
+    .opts{
+      display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:1rem
+    }
+    input[type="file"]{display:none}
+    label[for="localFile"]{
+      background:var(--accent);color:#fff;padding:.7rem 1.4rem;border-radius:25px;cursor:pointer;font-weight:700;transition:.3s
+    }
+    label[for="localFile"]:hover{transform:scale(1.05)}
+    #customUrl{
+      flex:1;max-width:400px;padding:.7rem 1rem;border-radius:25px;border:none;outline:none;background:rgba(255,255,255,.1);color:#fff;transition:.3s
+    }
+    #customUrl:focus{background:rgba(255,255,255,.2)}
+    button{
+      background:#333;color:#fff;border:none;padding:.7rem 1.4rem;border-radius:25px;cursor:pointer;font-weight:700;transition:.3s
+    }
+    button:hover{background:#444;transform:scale(1.05)}
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">Moon Chill</div>
+    <button class="back-btn" onclick="history.back()">Quay lại</button>
+  </header>
+
+  <main>
+    <!-- TRAILER AUTO PHÁT -->
+    <div id="trailerWrap">
+      <iframe id="trailerPlayer" allowfullscreen></iframe>
+    </div>
+
+    <!-- INFO PHIM -->
+    <div class="infoCard">
+      <img id="poster" src="" alt="Poster">
+      <div class="details">
+        <h2 id="mTitle">...</h2>
+        <p id="mOverview"></p>
+        <div class="meta">
+          <span id="mYear"></span>
+          <span id="mGenres"></span>
+          <span id="mRuntime"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLAYER CHÍNH -->
+    <div id="playerWrap">
+      <video id="player" controls style="display:none;"></video>
+    </div>
+
+    <!-- OPTIONS -->
+    <div class="opts">
+      <label for="localFile">📁 Chọn phim từ máy</label>
+      <input type="file" id="localFile" accept="video/*">
+      <input id="customUrl" placeholder="Hoặc dán link embed phim (Drive/Fembed...)">
+      <button onclick="applyCustom()">Xem phim</button>
+    </div>
+  </main>
+
+  <script>
+    const API_KEY = '06e0e61c431aedf92744213b2e14ad02';
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const title = params.get('title') || 'Phim không tên';
+
+    /* ====== ELEMENTS ====== */
+    const trailerPlayer = document.getElementById('trailerPlayer');
+    const player = document.getElementById('player');
+    const fileInp = document.getElementById('localFile');
+    const customUrl = document.getElementById('customUrl');
+
+    /* ====== AUTO FETCH TRAILER + INFO ====== */
+    (async () => {
+      if (!id) {
+        trailerPlayer.style.display = 'none';
+        return;
+      }
+      try {
+        const [vidRes, detailRes] = await Promise.all([
+          fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}&language=vi-VN`),
+          fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=vi-VN`)
+        ]);
+        const vidData = await vidRes.json();
+        const detail = await detailRes.json();
+
+        // trailer
+        const key = vidData.results?.find(v => v.type === 'Trailer' && v.site === 'YouTube')?.key;
+        if (key) {
+          trailerPlayer.src = `https://www.youtube.com/embed/${key}?autoplay=1&mute=1`;
+        } else {
+          trailerPlayer.style.display = 'none';
+        }
+
+        // info
+        document.getElementById('mTitle').textContent = detail.title || title;
+        document.getElementById('mOverview').textContent = detail.overview;
+        document.getElementById('mYear').textContent = (detail.release_date || '').slice(0, 4);
+        document.getElementById('mGenres').textContent = detail.genres.map(g => g.name).join(', ');
+        document.getElementById('mRuntime').textContent = detail.runtime ? `${detail.runtime} phút` : '';
+        document.getElementById('poster').src = `https://image.tmdb.org/t/p/w500${detail.poster_path}`;
+
+      } catch (e) {
+        console.error(e);
+        trailerPlayer.style.display = 'none';
+      }
+    })();
+
+    /* ====== LOCAL FILE ====== */
+    fileInp.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('video/')) {
+        alert('Vui lòng chọn file video!');
+        return;
+      }
+      const url = URL.createObjectURL(file);
+      player.src = url;
+      player.style.display = 'block';
+      trailerPlayer.style.display = 'none';
+    });
+
+    /* ====== EMBED LINK ====== */
+    function applyCustom() {
+      const url = customUrl.value.trim();
+      if (!url) return alert('Chưa nhập link!');
+      player.src = url;
+      player.style.display = 'block';
+      trailerPlayer.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

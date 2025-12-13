@@ -1,77 +1,372 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Moon Chill - Xem phim trực tuyến</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #111;
+      --accent: #e50914;
+      --text: #fff;
+      --glass: rgba(20, 20, 20, 0.7);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:'Roboto',sans-serif;overflow-x:hidden}
+    a{color:var(--text);text-decoration:none}
+    section{padding:50px 30px;position:relative}
+    section h2{margin-bottom:25px;font-size:2rem;font-weight:700;letter-spacing:.5px}
+
+    /* HEADER */
+    header{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:15px 40px;background:var(--glass);backdrop-filter:blur(10px);
+      position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,.08)
+    }
+    header .logo{font-size:2rem;font-weight:700;color:var(--accent);letter-spacing:1px}
+    header nav a{margin:0 12px;font-size:1rem;transition:.3s}
+    header nav a:hover{color:var(--accent);transform:scale(1.05)}
+    header .search-bar{display:flex;align-items:center}
+    header .search-bar input{
+      padding:8px 14px;border-radius:25px;border:none;outline:none;width:220px;background:rgba(255,255,255,.1);color:#fff;transition:.3s
+    }
+    header .search-bar input:focus{background:rgba(255,255,255,.2);width:250px}
+    header .mobile-menu-btn{display:none;font-size:2rem;cursor:pointer}
+
+    /* HERO */
+    .hero{
+      position:relative;height:80vh;background-size:cover;background-position:center;
+      display:flex;align-items:center;justify-content:flex-start;padding:60px;
+      animation:heroZoom 25s ease-in-out infinite alternate
+    }
+    @keyframes heroZoom{0%{transform:scale(1)}100%{transform:scale(1.08)}}
+    .hero::before{
+      content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.9) 30%,transparent)
+    }
+    .hero-content{position:relative;max-width:600px}
+    .hero-label{color:var(--accent);font-weight:700;margin-bottom:.5rem;font-size:1.1rem;letter-spacing:2px}
+    .hero h1{font-size:3.5rem;margin-bottom:1rem;line-height:1.1}
+    .hero p{margin-bottom:1.5rem;line-height:1.6;font-size:1.1rem;opacity:.9}
+    .btn-group{display:flex;gap:1rem;margin-top:1.5rem}
+    .btn-group button{
+      padding:.8rem 1.8rem;font-size:1rem;border:none;border-radius:30px;cursor:pointer;font-weight:700;transition:.3s
+    }
+    #playButton{background:var(--accent);color:#fff}
+    #playButton:hover{background:#f40612;transform:scale(1.05)}
+    #watchButton{background:rgba(255,255,255,.2);color:#fff;backdrop-filter:blur(5px)}
+    #watchButton:hover{background:rgba(255,255,255,.3);transform:scale(1.05)}
+    .add-list{background:rgba(255,255,255,.1);color:#fff;margin-top:1rem;padding:.6rem 1.4rem;border:1px solid rgba(255,255,255,.3);border-radius:25px;cursor:pointer;transition:.3s}
+    .add-list:hover{background:rgba(255,255,255,.2);transform:scale(1.05)}
+
+    /* SLIDER */
+    .slider-container{position:relative}
+    .movie-row{
+      display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:15px
+    }
+    .movie-row::-webkit-scrollbar{display:none}
+    .movie{
+      flex:0 0 auto;position:relative;border-radius:8px;overflow:hidden;
+      transition:transform .4s,box-shadow .4s
+    }
+    .movie img{height:220px;border-radius:8px;display:block}
+    .movie:hover{transform:scale(1.12) translateY(-5px);box-shadow:0 10px 30px rgba(229,9,20,.5)}
+    .slider-btn{
+      position:absolute;top:50%;transform:translateY(-50%);
+      background:rgba(0,0,0,.6);border:none;color:#fff;font-size:2.2rem;
+      padding:8px 14px;cursor:pointer;border-radius:50%;z-index:10;transition:.3s
+    }
+    .slider-btn:hover{background:rgba(0,0,0,.8);transform:translateY(-50%) scale(1.1)}
+    .slider-btn.left{left:10px}
+    .slider-btn.right{right:10px}
+
+    /* SKELETON LOADING */
+    .skeleton{
+      background:linear-gradient(90deg,#222 25%,#333 50%,#222 75%);
+      background-size:200% 100%;animation:shine 1.5s infinite;
+      height:220px;width:147px;border-radius:8px
+    }
+    @keyframes shine{0%{background-position:-200%}100%{background-position:200%}}
+
+    /* EMPTY STATE */
+    .empty{
+      text-align:center;padding:60px 20px
+    }
+    .empty img{
+      width:180px;opacity:.3;margin-bottom:20px
+    }
+    .empty h3{
+      font-size:1.5rem;margin-bottom:10px;opacity:.7
+    }
+    .empty p{
+      opacity:.5
+    }
+
+    /* POPUP TRAILER */
+    .popup{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);
+      justify-content:center;align-items:center;z-index:2000;backdrop-filter:blur(5px)
+    }
+    .popup-content{
+      position:relative;width:90%;max-width:900px;border-radius:12px;overflow:hidden;
+      box-shadow:0 0 40px rgba(0,0,0,.8)
+    }
+    .popup .close-btn{
+      position:absolute;top:15px;right:20px;font-size:2.5rem;cursor:pointer;color:#fff;z-index:2
+    }
+
+    /* DROPDOWN THỂ LOẠI - GLASS */
+    .dropdown{position:relative;display:inline-block}
+    .dropdown-content{
+      display:none;position:absolute;background:var(--glass);backdrop-filter:blur(10px);
+      min-width:180px;z-index:1;border-radius:8px;border:1px solid rgba(255,255,255,.1);overflow:hidden
+    }
+    .dropdown-content a{
+      color:#fff;padding:12px 18px;display:block;font-size:.95rem;transition:.2s
+    }
+    .dropdown-content a:hover{background:rgba(255,255,255,.1)}
+    .dropdown:hover .dropdown-content{display:block}
+
+    /* TRANSITION SECTION */
+    .section-fade{
+      animation:fadeIn .6s ease-in-out
+    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    /* FOOTER */
+    footer{
+      text-align:center;padding:25px;font-size:.9rem;opacity:.6;background:#000
+    }
+
+    /* MOBILE */
+    @media (max-width:768px){
+      header{padding:15px 20px}
+      header nav{display:none;flex-direction:column;position:absolute;top:60px;left:0;width:100%;background:var(--glass);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.1)}
+      header nav.active{display:flex}
+      header .mobile-menu-btn{display:block}
+      .hero{padding:40px 20px;height:60vh}
+      .hero h1{font-size:2.2rem}
+      section{padding:35px 20px}
+    }
+  </style>
 </head>
+
 <body>
   <!-- HEADER -->
   <header>
     <div class="logo">Moon Chill</div>
     <nav id="mainNav">
-      <a href="#">Trang chủ</a>
-      <a href="#">Phim mới</a>
-      <a href="#">Thể loại</a>
+      <a href="#" onclick="loadHome()">Trang chủ</a>
+      <a href="#" onclick="loadNowPlaying()">Phim mới</a>
+      <div class="dropdown">
+        <a href="#">Thể loại ▾</a>
+        <div class="dropdown-content" id="genreDropdown"></div>
+      </div>
       <a href="#">Yêu thích</a>
       <a href="#">Tài khoản</a>
     </nav>
     <div class="search-bar">
-      <form id="searchForm">
+      <form id="searchForm" onsubmit="doSearch(event)">
         <input type="text" id="searchInput" placeholder="Tìm kiếm phim...">
         <button type="submit">🔍</button>
       </form>
     </div>
-    <div class="mobile-menu-btn">&#9776;</div>
+    <div class="mobile-menu-btn" onclick="toggleNav()">&#9776;</div>
   </header>
 
   <!-- HERO BANNER -->
-  <section class="hero fade-in" id="hero">
+  <section class="hero fade-in" id="hero" style="display:none;">
     <div class="hero-content">
-      <div class="hero-label fade-in" id="heroLabel">NOW STREAMING</div>
+      <div class="hero-label">NOW STREAMING</div>
       <h1 id="heroTitle">Loading...</h1>
       <p id="heroDesc">Loading description...</p>
-      <button id="playButton">Xem ngay</button>
+      <div class="btn-group">
+        <button id="playButton" onclick="openHeroTrailer()">▶ Xem trailer</button>
+        <button id="watchButton" onclick="goWatch()">🎬 Xem phim</button>
+      </div>
       <button class="add-list">Thêm vào danh sách</button>
     </div>
   </section>
 
-  <!-- SLIDER PHIM THỊNH HÀNH -->
-  <section class="fade-in">
+  <!-- CÁC SLIDER -->
+  <section id="trendingSec" class="fade-in section-fade">
     <h2>Phim thịnh hành</h2>
     <div class="slider-container">
-      <button class="slider-btn left">&#10094;</button>
-      <div class="movie-row"></div>
-      <button class="slider-btn right">&#10095;</button>
+      <button class="slider-btn left" onclick="scrollRow('trendingRow',-300)">&#10094;</button>
+      <div class="movie-row" id="trendingRow"></div>
+      <button class="slider-btn right" onclick="scrollRow('trendingRow',300)">&#10095;</button>
     </div>
   </section>
 
-  <!-- SLIDER PHIM MỚI CẬP NHẬT -->
-  <section class="fade-in">
+  <section id="nowSec" class="fade-in section-fade" style="display:none;">
     <h2>Phim mới cập nhật</h2>
     <div class="slider-container">
-      <button class="slider-btn left">&#10094;</button>
-      <div class="movie-row"></div>
-      <button class="slider-btn right">&#10095;</button>
+      <button class="slider-btn left" onclick="scrollRow('nowRow',-300)">&#10094;</button>
+      <div class="movie-row" id="nowRow"></div>
+      <button class="slider-btn right" onclick="scrollRow('nowRow',300)">&#10095;</button>
+    </div>
+  </section>
+
+  <section id="searchSec" class="fade-in section-fade" style="display:none;">
+    <h2>Kết quả tìm kiếm</h2>
+    <div class="slider-container">
+      <button class="slider-btn left" onclick="scrollRow('searchRow',-300)">&#10094;</button>
+      <div class="movie-row" id="searchRow"></div>
+      <button class="slider-btn right" onclick="scrollRow('searchRow',300)">&#10095;</button>
+    </div>
+  </section>
+
+  <section id="genreSec" class="fade-in section-fade" style="display:none;">
+    <h2 id="genreTitle">Thể loại</h2>
+    <div class="slider-container">
+      <button class="slider-btn left" onclick="scrollRow('genreRow',-300)">&#10094;</button>
+      <div class="movie-row" id="genreRow"></div>
+      <button class="slider-btn right" onclick="scrollRow('genreRow',300)">&#10095;</button>
     </div>
   </section>
 
   <!-- POPUP TRAILER -->
   <div id="videoPopup" class="popup">
     <div class="popup-content">
-      <span class="close-btn">&times;</span>
+      <span class="close-btn" onclick="closeTrailer()">&times;</span>
       <iframe id="trailerVideo" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
 
   <!-- FOOTER -->
-  <footer class="fade-in">
-    © 2025 Moon Chill. Inspired by Netflix UI.
-  </footer>
+  <footer class="fade-in">© 2025 Moon Chill. Inspired by Netflix UI.</footer>
 
-  <!-- SCRIPT JS -->
-  <script src="app.js"></script>
+  <script>
+    const API_KEY = '06e0e61c431aedf92744213b2e14ad02';
+    let currentHeroId = null;
+
+    /* ====== UTILS ====== */
+    function scrollRow(id, dx) {
+      document.getElementById(id).scrollBy({ left: dx, behavior: 'smooth' });
+    }
+    function toggleNav() {
+      document.getElementById('mainNav').classList.toggle('active');
+    }
+    function closeTrailer() {
+      document.getElementById('videoPopup').style.display = 'none';
+      document.getElementById('trailerVideo').src = '';
+    }
+    function openTrailer(key) {
+      document.getElementById('trailerVideo').src = `https://www.youtube.com/embed/${key}?autoplay=1`;
+      document.getElementById('videoPopup').style.display = 'flex';
+    }
+    function goWatch() {
+      if (currentHeroId) window.location.href = `movie-player.html?id=${currentHeroId}&title=${encodeURIComponent(document.getElementById('heroTitle').textContent)}`;
+      else alert('Chưa có phim nào được chọn!');
+    }
+    function openHeroTrailer() {
+      const key = document.getElementById('heroTrailerKey')?.value;
+      if (key) openTrailer(key);
+      else alert('Trailer chưa sẵn sàng!');
+    }
+
+    /* ====== SKELETON ====== */
+    function skeletonRow(rowId) {
+      const row = document.getElementById(rowId);
+      row.innerHTML = Array(8).fill(0).map(() => `<div class="skeleton"></div>`).join('');
+    }
+
+    /* ====== EMPTY STATE ====== */
+    function emptyState(rowId, msg) {
+      const row = document.getElementById(rowId);
+      row.innerHTML = `
+        <div class="empty">
+          <img src="https://i.ibb.co/3sWSdPf/empty.png" alt="empty"/>
+          <h3>${msg}</h3>
+          <p>Hãy thử chức năng khác nhé!</p>
+        </div>`;
+    }
+
+    /* ====== RENDER SLIDER ====== */
+    function renderSlider(arr, rowId) {
+      if (!arr.length) { emptyState(rowId, 'Không tìm thấy phim nào'); return; }
+      const row = document.getElementById(rowId);
+      row.innerHTML = '';
+      arr.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'movie';
+        const img = document.createElement('img');
+        img.src = `https://image.tmdb.org/t/p/w500${m.poster_path}`;
+        img.alt = m.title;
+        img.onclick = () => window.location.href = `movie-player.html?id=${m.id}&title=${encodeURIComponent(m.title)}`;
+        div.appendChild(img);
+        row.appendChild(div);
+      });
+    }
+
+    /* ====== LOAD TMDB ====== */
+    async function loadSection(url, rowId, secId, hero = false) {
+      skeletonRow(rowId);
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        renderSlider(data.results, rowId);
+        if (secId) document.getElementById(secId).style.display = 'block';
+        if (hero && data.results.length) setHero(data.results[0]);
+      } catch {
+        emptyState(rowId, 'Có lỗi khi tải dữ liệu');
+      }
+    }
+    function setHero(m) {
+      currentHeroId = m.id;
+      const hero = document.getElementById('hero');
+      hero.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${m.backdrop_path || m.poster_path})`;
+      document.getElementById('heroTitle').textContent = m.title;
+      document.getElementById('heroDesc').textContent = m.overview;
+      hero.style.display = 'flex';
+    }
+
+    /* ====== CÁC MỤC MENU ====== */
+    function loadHome() {
+      ['trendingSec'].forEach(id => document.getElementById(id).style.display = 'block');
+      ['nowSec', 'searchSec', 'genreSec'].forEach(id => document.getElementById(id).style.display = 'none');
+      document.getElementById('hero').style.display = 'flex';
+    }
+    function loadNowPlaying() {
+      ['nowSec'].forEach(id => document.getElementById(id).style.display = 'block');
+      ['trendingSec', 'searchSec', 'genreSec', 'hero'].forEach(id => document.getElementById(id).style.display = 'none');
+      loadSection(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=vi-VN&page=1`, 'nowRow', null, false);
+    }
+    async function loadGenres() {
+      const res = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=vi-VN`);
+      const data = await res.json();
+      const dd = document.getElementById('genreDropdown');
+      data.genres.forEach(g => {
+        const a = document.createElement('a');
+        a.href = '#';
+        a.textContent = g.name;
+        a.onclick = (e) => {
+          e.preventDefault();
+          loadGenreMovies(g.id, g.name);
+        };
+        dd.appendChild(a);
+      });
+    }
+    function loadGenreMovies(genreId, genreName) {
+      ['genreSec'].forEach(id => document.getElementById(id).style.display = 'block');
+      ['trendingSec', 'nowSec', 'searchSec', 'hero'].forEach(id => document.getElementById(id).style.display = 'none');
+      document.getElementById('genreTitle').textContent = genreName;
+      loadSection(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=vi-VN&with_genres=${genreId}&sort_by=popularity.desc`, 'genreRow', null, false);
+    }
+    function doSearch(e) {
+      e.preventDefault();
+      const kw = document.getElementById('searchInput').value.trim();
+      if (!kw) return;
+      ['searchSec'].forEach(id => document.getElementById(id).style.display = 'block');
+      ['trendingSec', 'nowSec', 'genreSec', 'hero'].forEach(id => document.getElementById(id).style.display = 'none');
+      loadSection(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=vi-VN&query=${encodeURIComponent(kw)}`, 'searchRow', null, false);
+    }
+
+    /* ====== KHỞI CHẠY ====== */
+    window.onload = () => {
+      loadSection(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=vi-VN`, 'trendingRow', 'trendingSec', true);
+      loadGenres();
+    };
+  </script>
 </body>
 </html>

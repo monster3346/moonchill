@@ -1,157 +1,432 @@
-/* === GLOBAL === */
-body { 
-  margin:0; 
-  font-family:'Roboto', sans-serif; 
-  background:#111; 
-  color:#fff; 
-  transition: background 0.3s, color 0.3s;
+/* ====== ROOT & GLOBAL ====== */
+:root {
+  --bg: #111;
+  --accent: #e50914;
+  --text: #fff;
+  --glass: rgba(20, 20, 20, 0.7);
+  --radius: 12px;
+  --transition: 0.4s ease;
 }
-body.dark-mode { background:#121212; color:#fff; }
-
-section { padding:30px; }
-section h2 { margin-bottom:20px; font-size:1.5rem; }
-
-/* === HEADER === */
-header { 
-  display:flex; 
-  justify-content:space-between; 
-  align-items:center; 
-  padding:15px 30px; 
-  background:#141414; 
-  position:sticky; 
-  top:0; 
-  z-index:1000; 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-header .logo { font-size:1.5rem; font-weight:700; color:#e50914; }
-header nav a { margin:0 10px; color:#fff; text-decoration:none; }
-header nav a:hover { color:#e50914; }
-header .search-bar input { 
-  padding:5px 10px; 
-  border-radius:4px; 
-  border:none; 
-  outline:none;
-  width:200px;
+body {
+  background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+  background-size: 400% 400%;
+  animation: bgMove 20s ease infinite;
+  color: var(--text);
+  font-family: 'Roboto', sans-serif;
+  overflow-x: hidden;
 }
-header .mobile-menu-btn { display:none; font-size:2rem; cursor:pointer; }
-
-/* === HERO === */
-.hero { 
-  position:relative; 
-  height:70vh; 
-  background-size:cover; 
-  background-position:center; 
-  display:flex; 
-  align-items:center; 
-  justify-content:flex-start; 
-  padding:50px; 
-  animation: heroZoom 30s ease-in-out infinite alternate;
+@keyframes bgMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
-.hero-label { 
-  color:#e50914; 
-  font-weight:700; 
-  opacity:0; 
-  transform:translateY(-20px); 
-  transition:0.8s; 
-}
-.hero-label.visible { opacity:1; transform:translateY(0); }
-#heroTitle,#heroDesc,#playButton,.add-list { opacity:0; transform:translateY(20px); transition:1s; }
-.visible-hero-content { opacity:1 !important; transform:translateY(0) !important; }
-.hero button { 
-  padding:10px 20px; 
-  margin-right:10px; 
-  background:#e50914; 
-  border:none; 
-  cursor:pointer; 
-  border-radius:4px; 
-  color:#fff; 
-  font-weight:700; 
-}
-.hero button.add-list { background:#333; }
-@keyframes heroZoom { 0%{transform:scale(1);} 100%{transform:scale(1.05);} }
-
-/* === SLIDER === */
-.slider-container { position:relative; }
-.movie-row { 
-  display:flex; 
-  gap:10px; 
-  overflow-x:auto; 
-  scroll-behavior:smooth; 
-  padding-bottom:10px;
-}
-.movie-row::-webkit-scrollbar { display:none; } /* Ẩn scrollbar */
-.movie img { 
-  height:200px; 
-  border-radius:5px; 
-  cursor:pointer; 
-  transition:transform 0.3s, box-shadow 0.3s; 
-}
-.movie img:hover { 
-  transform:scale(1.1); 
-  box-shadow:0 5px 20px rgba(0,0,0,0.7); 
-}
-.slider-btn { 
-  position:absolute; 
-  top:50%; 
-  transform:translateY(-50%); 
-  background:rgba(0,0,0,0.5); 
-  border:none; 
-  color:#fff; 
-  font-size:2rem; 
-  padding:5px 10px; 
-  cursor:pointer; 
-  border-radius:4px;
-  z-index:10;
-}
-.slider-btn.left { left:0; } 
-.slider-btn.right { right:0; }
-
-/* === POPUP TRAILER === */
-.popup { 
-  display:none; 
-  position:fixed; 
-  top:0; left:0; 
-  width:100%; height:100%; 
-  background:rgba(0,0,0,0.9); 
-  justify-content:center; 
-  align-items:center; 
-  z-index:2000; 
-}
-.popup-content { 
-  position:relative; 
-  width:80%; 
-  max-width:800px; 
-}
-.popup .close-btn { 
-  position:absolute; 
-  top:10px; 
-  right:10px; 
-  font-size:2rem; 
-  cursor:pointer; 
-  color:#fff; 
+a {
+  color: var(--text);
+  text-decoration: none;
+  transition: var(--transition);
 }
 
-/* === FADE-IN === */
-.fade-in { opacity:0; transform:translateY(20px); transition:1s; }
-.fade-in.visible { opacity:1; transform:translateY(0); }
-
-/* === FOOTER === */
-footer { 
-  text-align:center; 
-  padding:20px; 
-  background:#141414; 
-  margin-top:30px; 
+/* ====== HEADER - GLASS ====== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+header .logo {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+header nav a {
+  margin: 0 12px;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+header nav a:hover {
+  color: var(--accent);
+  transform: scale(1.05);
+}
+header .search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+header .search-bar input {
+  padding: 8px 14px;
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  width: 220px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: var(--transition);
+}
+header .search-bar input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  width: 250px;
+}
+header .mobile-menu-btn {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
 }
 
-/* === RESPONSIVE === */
-@media (max-width:768px){
-  header nav { display:none; flex-direction:column; background:#141414; position:absolute; top:60px; left:0; width:100%; padding:10px; }
-  header nav.active { display:flex; }
-  header .mobile-menu-btn { display:block; }
-  .hero { padding:30px; height:50vh; }
-  .movie img { height:150px; }
+/* ====== HERO - GLASS + HOVER ====== */
+.hero {
+  position: relative;
+  height: 80vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 60px;
+  animation: heroZoom 25s ease-in-out infinite alternate;
+}
+@keyframes heroZoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 30%, transparent);
+}
+.hero-content {
+  position: relative;
+  max-width: 600px;
+}
+.hero-label {
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+.hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.1;
+}
+.hero p {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+.btn-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.btn-group button {
+  padding: 0.8rem 1.8rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: var(--transition);
+}
+#playButton {
+  background: var(--accent);
+  color: #fff;
+}
+#playButton:hover {
+  background: #f40612;
+  transform: scale(1.05);
+}
+#watchButton {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  backdrop-filter: blur(5px);
+}
+#watchButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+.add-list {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  margin-top: 1rem;
+  padding: 0.6rem 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.add-list:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
 }
 
-/* === DARK MODE TOGGLE === */
-body.dark-mode header { background:#1a1a1a; }
-body.dark-mode footer { background:#1a1a1a; }
-body.dark-mode .hero button.add-list { background:#555; }
+/* ====== SLIDER - GLASS HOVER ====== */
+.slider-container {
+  position: relative;
+}
+.movie-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 15px;
+}
+.movie-row::-webkit-scrollbar {
+  display: none;
+}
+.movie {
+  flex: 0 0 auto;
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.movie img {
+  height: 220px;
+  border-radius: var(--radius);
+  display: block;
+  transition: var(--transition);
+}
+.movie:hover {
+  transform: scale(1.12) translateY(-5px);
+  box-shadow: 0 10px 30px rgba(229, 9, 20, 0.5);
+}
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: #fff;
+  font-size: 2.2rem;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 10;
+  transition: var(--transition);
+}
+.slider-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: translateY(-50%) scale(1.1);
+}
+.slider-btn.left {
+  left: 10px;
+}
+.slider-btn.right {
+  right: 10px;
+}
+
+/* ====== SKELETON LOADING ====== */
+.skeleton {
+  background: linear-gradient(90deg, #222 25%, #333 50%, #222 75%);
+  background-size: 200% 100%;
+  animation: shine 1.5s infinite;
+  height: 220px;
+  width: 147px;
+  border-radius: var(--radius);
+}
+@keyframes shine {
+  0% { background-position: -200%; }
+  100% { background-position: 200%; }
+}
+
+/* ====== EMPTY STATE ====== */
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+.empty img {
+  width: 180px;
+  opacity: 0.3;
+  margin-bottom: 20px;
+}
+.empty h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+.empty p {
+  opacity: 0.5;
+}
+
+/* ====== POPUP TRAILER - GLASS ====== */
+.popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+.popup-content {
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+}
+.popup .close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 2.5rem;
+  cursor: pointer;
+  color: #fff;
+  z-index: 2;
+}
+
+/* ====== DROPDOWN - GLASS ====== */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  min-width: 180px;
+  z-index: 1;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.dropdown-content a {
+  color: #fff;
+  padding: 12px 18px;
+  display: block;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+.dropdown-content a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* ====== SECTION TRANSITION ====== */
+.section-fade {
+  animation: fadeIn 0.6s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====== FOOTER ====== */
+footer {
+  text-align: center;
+  padding: 25px;
+  font-size: 0.9rem;
+  opacity: 0.6;
+  background: #000;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  header {
+    padding: 15px 20px;
+  }
+  header nav {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  header nav.active {
+    display: flex;
+  }
+  header .mobile-menu-btn {
+    display: block;
+  }
+  .hero {
+    padding: 40px 20px;
+    height: 60vh;
+  }
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+  section {
+    padding: 35px 20px;
+  }
+}
+
+/* ====== DARK MODE ====== */
+body.dark-mode {
+  --bg: #121212;
+  background: #121212;
+  color: #eee;
+}
+body.dark-mode header {
+  background: rgba(10, 10, 10, 0.8);
+}
+body.dark-mode footer {
+  background: #0a0a0a;
+}
+body.dark-mode .hero button.add-list {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ====== EXTRA: WATCH BUTTON ====== */
+.btn-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+#watchButton {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s, transform 1s, background 0.3s;
+}
+#watchButton.visible-hero-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+#watchButton:hover {
+  background: #f40612;
+  transform: scale(1.05);
+}
+@media (max-width: 400px) {
+  .btn-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
